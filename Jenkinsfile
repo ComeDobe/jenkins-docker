@@ -1,13 +1,13 @@
 pipeline {
     agent any 
     environment {
-    DOCKERHUB_CREDENTIALS = credentials('karim-dockerhub')
+    DOCKERHUB_CREDENTIALS = credentials('cdobe01')
     }
     stages { 
 
         stage('Build docker image') {
             steps {  
-                sh 'docker build -t myapp/flask:$BUILD_NUMBER .'
+                sh 'docker build -f ./Dockerfile -t cdobe01/application:v1.0:$BUILD_NUMBER .'
             }
         }
         stage('login to dockerhub') {
@@ -17,7 +17,7 @@ pipeline {
         }
         stage('push image') {
             steps{
-                sh 'docker push myapp/flask:$BUILD_NUMBER'
+                sh 'docker push cdobe01/application:v1.0:$BUILD_NUMBER'
             }
         }
 }
