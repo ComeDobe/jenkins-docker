@@ -1,37 +1,29 @@
 pipeline {
-    agent any
+    agent any 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('cdobe01') 
+    DOCKERHUB_CREDENTIALS = credentials('karim-dockerhub')
     }
-    stages {
+    stages { 
+
         stage('Build docker image') {
-            steps {
-                script {
-                    sh 'docker build -f ./Dockerfile -t cdobe01/application:v1.0.$BUILD_NUMBER .'
-                }
+            steps {  
+                sh 'docker build -t myapp/flask:$BUILD_NUMBER .'
             }
         }
-        stage('Login to DockerHub') {
-            steps {
-                script {
-                  
-                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                }
+        stage('login to dockerhub') {
+            steps{
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
             }
         }
-        stage('Push docker image') {
-            steps {
-                script {
-                    sh 'docker push cdobe01/application:v1.0.$BUILD_NUMBER'
-                }
+        stage('push image') {
+            steps{
+                sh 'docker push cdobe01/flask:$BUILD_NUMBER'
             }
         }
-    }
-    post {
+}
+post {
         always {
-            script {
-                sh 'docker logout'
-            }
+            sh 'docker logout'
         }
     }
 }
